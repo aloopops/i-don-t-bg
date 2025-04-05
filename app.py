@@ -172,13 +172,7 @@ def download_file(filename):
         return jsonify({'error': 'File not found'}), 404
 
 # Configure WSGI middleware for Vercel
-if not __name__ == "__main__":
-    app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
-        '/static': {
-            'target': app.static_folder,
-            'path': '/static'
-        }
-    })
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
