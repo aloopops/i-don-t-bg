@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Remover</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container py-5">
+        <header class="text-center mb-5">
+            <h1 class="display-4 fw-bold">Background Remover</h1>
+            <p class="lead">Upload an image and remove the background instantly</p>
+        </header>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-lg mb-5">
+                    <div class="card-body p-4">
+                        <!-- Upload Form -->
+                        <form id="uploadForm" class="mb-4">
+                            <div class="upload-area mb-4" id="dropArea">
+                                <div class="upload-content text-center py-5">
+                                    <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                                    <h4>Drag and drop your image here</h4>
+                                    <p>or</p>
+                                    <label for="fileInput" class="btn btn-primary">
+                                        <i class="fas fa-file-image me-2"></i>Browse Files
+                                    </label>
+                                    <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp" hidden>
+                                    <p class="mt-2 text-muted small">Supported formats: PNG, JPG, JPEG, WEBP</p>
+                                </div>
+                            </div>
+                            
+                            <div id="uploadPreview" class="text-center mb-4" style="display: none;">
+                                <img id="previewImage" class="img-fluid mw-100 rounded" style="max-height: 300px;" alt="Preview">
+                                <div class="mt-2">
+                                    <button type="button" id="changeImage" class="btn btn-sm btn-secondary me-2">
+                                        <i class="fas fa-exchange-alt me-1"></i>Change
+                                    </button>
+                                    <button type="submit" id="processButton" class="btn btn-success">
+                                        <i class="fas fa-magic me-1"></i>Remove Background
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Processing Indicator -->
+                        <div id="processingIndicator" class="text-center mb-4" style="display: none;">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <h5>Removing background...</h5>
+                            <div class="progress mt-3">
+                                <div id="processingProgress" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="resultsSection" style="display: none;">
+                            <h4 class="text-center mb-4">Before & After</h4>
+                            
+                            <div class="row comparison-container">
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-header">Original</div>
+                                        <div class="card-body d-flex align-items-center justify-content-center">
+                                            <img id="originalImage" class="img-fluid rounded" alt="Original Image">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-header">Background Removed</div>
+                                        <div class="card-body d-flex align-items-center justify-content-center bg-transparent-grid">
+                                            <img id="processedImage" class="img-fluid rounded" alt="Processed Image">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <a id="downloadLink" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-download me-2"></i>Download Image
+                                </a>
+                                <button id="newImageBtn" class="btn btn-outline-secondary btn-lg ms-2">
+                                    <i class="fas fa-redo me-2"></i>Process New Image
+                                </button>
+                                
+                                <!-- API URL Display Section -->
+                                
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Alert -->
+                        <div id="errorAlert" class="alert alert-danger mt-3" style="display: none;" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span id="errorMessage"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="row text-center mb-5">
+                    <div class="col-md-4 mb-3">
+                        <div class="feature-item">
+                            <i class="fas fa-bolt fa-2x mb-3 text-primary"></i>
+                            <h5>Fast Processing</h5>
+                            <p>Quick background removal powered by advanced AI</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="feature-item">
+                            <i class="fas fa-image fa-2x mb-3 text-primary"></i>
+                            <h5>High Quality</h5>
+                            <p>Maintain image quality with precise edge detection</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="feature-item">
+                            <i class="fas fa-lock fa-2x mb-3 text-primary"></i>
+                            <h5>Secure</h5>
+                            <p>Your images are processed securely and not stored</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center mt-5">
+            <p>© 2023 Background Remover Tool. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
